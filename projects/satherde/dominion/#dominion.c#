@@ -1,9 +1,5 @@
-#include "dominion.h"
-#include "dominion_helpers.h"
-#include "rngs.h"
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
+j
+jjjjjjjjlsaf
 
 
 
@@ -233,7 +229,7 @@ int shuffle(int player, struct gameState *state) {
 }
 
 int playCard(int handPos, int choice1, int choice2, int choice3, struct gameState *state)
-{
+{kkjkkkl;;
     int card;
     int coin_bonus = 0; 		//tracks coins gain from actions
 
@@ -1140,7 +1136,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
 int baron_func(struct gameState *state, int currentPlayer, int choice1) {
 	state->numBuys++;//Increase buys by 1!
 	if (choice1 > 0) { //Boolean true or going to discard an estate
-	    int p = 2;//Iterator for hand!
+	    int p = 0;//Iterator for hand!
 	    int card_not_discarded = 1;//Flag for discard set!
 	    while(card_not_discarded) {
 		if (state->hand[currentPlayer][p] == estate) { //Found an estate card!
@@ -1152,7 +1148,7 @@ int baron_func(struct gameState *state, int currentPlayer, int choice1) {
 		    }
 		    state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
 		    state->handCount[currentPlayer]--;
-		    card_not_discarded = 1;//Exit the loop
+		    card_not_discarded = 0;//Exit the loop
 		}
 		else if (p > state->handCount[currentPlayer]) {
 		    if(DEBUG) {
@@ -1202,7 +1198,7 @@ int minion_func(struct gameState *state, int currentPlayer, int handPos, int cho
 
 		if (choice1)
         {
-            state->coins = state->coins + 4;
+            state->coins = state->coins + 2;
         }
         else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
         {
@@ -1213,7 +1209,7 @@ int minion_func(struct gameState *state, int currentPlayer, int handPos, int cho
             }
 
             //draw 4
-            for (i = 0; i < 2; i++)
+            for (i = 0; i < 4; i++)
             {
                 drawCard(currentPlayer, state);
             }
@@ -1254,7 +1250,7 @@ int ambassador_func(struct gameState *state, int currentPlayer, int handPos, int
             return -1;
         }
 
-        if (choice1 == handPos + 1)
+        if (choice1 == handPos)
         {
             return -1;
         }
@@ -1280,7 +1276,7 @@ int ambassador_func(struct gameState *state, int currentPlayer, int handPos, int
         //each other player gains a copy of revealed card
         for (i = 0; i < state->numPlayers; i++)
         {
-            if (i == currentPlayer)
+            if (i != currentPlayer)
             {
                 gainCard(state->hand[currentPlayer][choice1], state, 0, i);
             }
@@ -1332,7 +1328,7 @@ int tribute_func(struct gameState *state, int currentPlayer, int nextPlayer, int
                     state->discardCount[nextPlayer]--;
                 }
 
-                shuffle(currentPlayer, state);//Shuffle the deck
+                shuffle(nextPlayer,state);//Shuffle the deck
             }
             tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
             state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
@@ -1350,7 +1346,7 @@ int tribute_func(struct gameState *state, int currentPlayer, int nextPlayer, int
 
         for (i = 0; i <= 2; i ++) {
             if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) { //Treasure cards
-                state->coins -= 2;
+                state->coins += 2;
             }
 
             else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
@@ -1370,7 +1366,7 @@ int mine_func(struct gameState *state, int currentPlayer, int handPos, int choic
 	int i = 0;
         j = state->hand[currentPlayer][choice1];  //store card we will trash
 
-        if (state->hand[currentPlayer][choice1] > copper || state->hand[currentPlayer][choice1] > gold)
+        if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
         {
             return -1;
         }
@@ -1385,7 +1381,7 @@ int mine_func(struct gameState *state, int currentPlayer, int handPos, int choic
             return -1;
         }
 
-        gainCard(choice1, state, 2, currentPlayer);
+        gainCard(choice2, state, 2, currentPlayer);
 
         //discard card from hand
         discardCard(handPos, currentPlayer, state, 0);
