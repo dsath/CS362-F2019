@@ -6,13 +6,23 @@
 char inputChar()
 {
     // TODO: rewrite this function
-    return ' ';
+	int randChar = (rand() % (126 - 31)) + 32;
+    return (char) randChar;
 }
 
 char *inputString()
 {
     // TODO: rewrite this function
-    return "";
+	//char *string = malloc(6 * sizeof(char));
+	char string[5];
+	memset(string, '\0', sizeof(string));
+
+	int i;
+	for(i = 0; i < 5; i++) {
+		int randChar = (rand() % 26) + 97;
+		string[i] = (char) randChar;
+	}
+    return string;
 }
 
 void testme()
