@@ -1,0 +1,144 @@
+        -:    0:Source:unittest4.c
+        -:    0:Graph:unittest4.gcno
+        -:    0:Data:unittest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:///////////////////////////////////////////
+        -:    2:// Baron Unit Tests
+        -:    3://////////////////////////////////////////
+        -:    4:
+        -:    5:
+        -:    6://int baron_func(struct gameState *state, int currentPlayer, int choice1);
+        -:    7:
+        -:    8:#include <stdio.h> 
+        -:    9:#include <string.h> 
+        -:   10:#include <math.h>
+        -:   11:#include <stdlib.h>
+        -:   12:#include "dominion.h"
+        -:   13:#include "dominion_helpers.h"
+        -:   14:#include "rngs.h"
+        -:   15:
+        -:   16:
+        -:   17:int tribute_func_test(struct gameState *state, int currentPlayer, int nextPlayer, int *tributeRevealedCards); 
+function main called 1 returned 100% blocks executed 100%
+        1:   18:int main() {
+        1:   19:	int *x = 0;
+        1:   20:    int tributeRevealedCards[2] = {-1, -1};
+        1:   21:int k[10] = { adventurer, council_room, feast, gardens, mine
+        -:   22:, remodel, smithy, village, baron, great_hall };
+        -:   23:	struct gameState G;
+        -:   24:	int
+        -:   25:	coppers[MAX_HAND];
+        -:   26:	int
+        -:   27:	silvers[MAX_HAND];
+        -:   28:	int
+        -:   29:	golds[MAX_HAND];
+        1:   30:	memset(&G, 0, sizeof(struct gameState));
+        1:   31:	initializeGame(2, k, 5, &G);
+call    0 returned 100%
+        1:   32:	G.handCount[0] = 5;
+        1:   33:	memcpy(G.hand[0], coppers, sizeof(int) * 5);
+        1:   34:	tribute_func_test(&G, 0, 0, tributeRevealedCards) ;
+call    0 returned 100%
+        1:   35:	tribute_func_test(&G, 0, 0, tributeRevealedCards);
+call    0 returned 100%
+        1:   36:	tribute_func_test(&G, 0, 0, tributeRevealedCards);
+call    0 returned 100%
+        -:   37:
+        1:   38:	return 0;
+        -:   39:}
+        -:   40:
+function tribute_func_test called 3 returned 100% blocks executed 77%
+        3:   41:int tribute_func_test(struct gameState *state, int currentPlayer, int nextPlayer, int *tributeRevealedCards) {
+        3:   42:	int i = 0;
+        3:   43:        if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+        2:   44:            if (state->deckCount[nextPlayer] > 0) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   45:                tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
+    #####:   46:                state->deckCount[nextPlayer]--;
+        -:   47:            }
+        2:   48:            else if (state->discardCount[nextPlayer] > 0) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   49:                tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer]-1];
+    #####:   50:                state->discardCount[nextPlayer]--;
+        -:   51:            }
+        -:   52:            else {
+        -:   53:                //No Card to Reveal
+        -:   54:                if (DEBUG) {
+        -:   55:                    printf("No cards to reveal\n");
+        -:   56:                }
+        -:   57:            }
+        -:   58:        }
+        -:   59:
+        -:   60:        else {
+        1:   61:            if (state->deckCount[nextPlayer] == 0) {
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   62:                for (i = 0; i < state->discardCount[nextPlayer]; i++) {
+branch  0 never executed
+branch  1 never executed
+    #####:   63:                    state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
+    #####:   64:                    state->deckCount[nextPlayer]++;
+    #####:   65:                    state->discard[nextPlayer][i] = -1;
+    #####:   66:                    state->discardCount[nextPlayer]--;
+        -:   67:                }
+        -:   68:
+    #####:   69:                shuffle(currentPlayer, state);//Shuffle the deck
+call    0 never executed
+        -:   70:            }
+        1:   71:            tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
+        1:   72:            state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+        1:   73:            state->deckCount[nextPlayer]--;
+        1:   74:            tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
+        1:   75:            state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+        1:   76:            state->deckCount[nextPlayer]--;
+        -:   77:        }
+        -:   78:
+        3:   79:        if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   80:            state->playedCards[state->playedCardCount] = tributeRevealedCards[1];
+    #####:   81:            state->playedCardCount++;
+    #####:   82:            tributeRevealedCards[1] = -1;
+        -:   83:        }
+        -:   84:
+       12:   85:        for (i = 0; i <= 2; i ++) {
+branch  0 taken 75%
+branch  1 taken 25% (fallthrough)
+        9:   86:            if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) { //Treasure cards
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0%
+branch  4 taken 0% (fallthrough)
+branch  5 taken 100%
+        3:   87:                state->coins -= 2;
+        -:   88:            }
+        -:   89:
+        6:   90:            else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0%
+branch  6 taken 100% (fallthrough)
+branch  7 taken 0%
+branch  8 taken 0% (fallthrough)
+branch  9 taken 100%
+        3:   91:                drawCard(currentPlayer, state);
+call    0 returned 100%
+        3:   92:                drawCard(currentPlayer, state);
+call    0 returned 100%
+        -:   93:            }
+        -:   94:            else { //Action Card
+        3:   95:                state->numActions = state->numActions + 2;
+        -:   96:            }
+        -:   97:        }
+        -:   98:
+        3:   99:        return 0;
+        -:  100:}

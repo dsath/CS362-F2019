@@ -29,6 +29,9 @@ all: playdom player
 
 unittestresults: unittest1.c
 	gcc -o unittest1 unittest1.c dominion.c rngs.c -lm -coverage
+	gcc -o unittest2 unittest2.c dominion.c rngs.c -lm -coverage
+	gcc -o unittest3 unittest3.c dominion.c rngs.c -lm -coverage
+	gcc -o unittest4 unittest4.c dominion.c rngs.c -lm -coverage
 
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
