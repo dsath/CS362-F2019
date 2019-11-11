@@ -27,5 +27,8 @@ player: player.c interface.o
 
 all: playdom player 
 
+unittestresults: unittest1.c
+	gcc -o unittest1 unittest1.c dominion.c rngs.c -lm -coverage
+
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
