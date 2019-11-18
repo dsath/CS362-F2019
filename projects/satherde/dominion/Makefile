@@ -26,7 +26,16 @@ player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
 randomtestresults: 
-	gcc -o randomtestcard1 randomtestcard1.c
+	gcc -o randomtestcard1 randomtestcard1.c dominion.c rngs.c -lm -coverage
+	gcc -o randomtestcard2 randomtestcard2.c dominion.c rngs.c -lm -coverage
+	gcc -o randomtestcard3 randomtestcard3.c dominion.c rngs.c -lm -coverage
+	randomtestcard1
+	randomtestcard2
+	randomtestcard3
+	gcov randomtestcard1.c -b -f >> randomtestresults.out
+	gcov randomtestcard2.c -b -f >> randomtestresults.out
+	gcov randomtestcard3.c -b -f >> randomtestresults.out
+	
 
 all: playdom player 
 

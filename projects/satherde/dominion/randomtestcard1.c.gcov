@@ -1,0 +1,166 @@
+        -:    0:Source:randomtestcard1.c
+        -:    0:Graph:randomtestcard1.gcno
+        -:    0:Data:randomtestcard1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:///////////////////////////////////////////
+        -:    2:// Baron Unit Tests
+        -:    3://////////////////////////////////////////
+        -:    4:
+        -:    5:
+        -:    6://int baron_func(struct gameState *state, int currentPlayer, int choice1);
+        -:    7:
+        -:    8:#include <stdio.h> 
+        -:    9:#include <string.h> 
+        -:   10:#include <math.h>
+        -:   11:#include <stdlib.h>
+        -:   12:#include "dominion.h"
+        -:   13:#include "dominion_helpers.h"
+        -:   14:#include "rngs.h"
+        -:   15:
+        -:   16:int baron_func_test(struct gameState *state, int currentPlayer, int choice1); 
+        -:   17:struct gameState* randomGameState();
+        -:   18:
+        -:   19:
+        -:   20:
+        -:   21:
+        -:   22:
+function main called 1 returned 100% blocks executed 100%
+        1:   23:int main() {
+        1:   24:	int k[10] = { adventurer, council_room, feast, gardens, mine
+        -:   25:	, remodel, smithy, village, baron, great_hall };
+        -:   26:	struct gameState G;
+        -:   27:	int
+        -:   28:	coppers[MAX_HAND];
+        -:   29:	int
+        -:   30:	silvers[MAX_HAND];
+        -:   31:	int
+        -:   32:	golds[MAX_HAND];
+        1:   33:	memset(&G, 0, sizeof(struct gameState));
+        -:   34:	
+        1:   35:	int i = 0;
+        1:   36:	int j = 0;
+     1001:   37:	for( i = 0; i < 1000; i++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   38:
+     1000:   39:		initializeGame(rand() % 5, k, rand(), &G);
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+  1001000:   40:		for( j = 0; j < 1000; j++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+  1000000:   41:			baron_func_test(&G, rand() % 5, rand() % 3);
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -:   42:		}
+        -:   43:	}
+        -:   44:
+        1:   45:	return 0;
+        -:   46:}
+        -:   47:
+        -:   48:/*
+        -:   49:struct gameState* randomGameState() {
+        -:   50:	int i = 0;
+        -:   51:	struct gameState *t = malloc(sizeof(struct gameState));
+        -:   52:	t->numPlayers = rand() % 4;
+        -:   53:	for( i = 0; i < treasure_map + 1; i ++) {
+        -:   54:		t->supplyCount[i] = rand() % 15;
+        -:   55:	}
+        -:   56:	for( i = 0; i < treasure_map + 1; i ++) {
+        -:   57:		t->embargoTokens[i] = rand() % 15;
+        -:   58:	}
+        -:   59:	t->outpostPlayed = rand() % 4;
+        -:   60:	t->outpostTurn = rand() % 4;
+        -:   61:	t->whoseTurn = rand() % 4;
+        -:   62:	t->phase = rand() % 4;
+        -:   63:	t->numActions = rand() % 4;
+        -:   64:	t->coins = rand() % 4;
+        -:   65:	t->numBuys = rand() % 4;
+        -:   66:
+        -:   67:}
+        -:   68:*/
+        -:   69:
+function baron_func_test called 1000000 returned 100% blocks executed 100%
+  1000000:   70:int baron_func_test(struct gameState *state, int currentPlayer, int choice1) {
+  1000000:   71:	state->numBuys++;//Increase buys by 1!
+  1000000:   72:	if (choice1 > 0) { //Boolean true or going to discard an estate
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+        -:   73:	    //int p = 2;//Iterator for hand!
+   667118:   74:	    int p = 0;//Iterator for hand!
+   667118:   75:	    int card_not_discarded = 1;//Flag for discard set!
+  3401781:   76:	    while(card_not_discarded) {
+branch  0 taken 76%
+branch  1 taken 24% (fallthrough)
+  2067545:   77:		if (state->hand[currentPlayer][p] == estate) { //Found an estate card!
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+     1042:   78:		    state->coins += 4;//Add 4 coins to the amount of coins
+     1042:   79:		    state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
+     1042:   80:		    state->discardCount[currentPlayer]++;
+     3782:   81:		    for (; p < state->handCount[currentPlayer]; p++) {
+branch  0 taken 72%
+branch  1 taken 28% (fallthrough)
+     2740:   82:			state->hand[currentPlayer][p] = state->hand[currentPlayer][p+1];
+        -:   83:		    }
+     1042:   84:		    state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
+     1042:   85:		    state->handCount[currentPlayer]--;
+        -:   86:		    //card_not_discarded = 1;//Exit the loop
+     1042:   87:		    card_not_discarded = 0;//Exit the loop
+        -:   88:		}
+  2066503:   89:		else if (p > state->handCount[currentPlayer]) {
+branch  0 taken 32% (fallthrough)
+branch  1 taken 68%
+        -:   90:		    if(DEBUG) {
+        -:   91:			printf("No estate cards in your hand, invalid choice\n");
+        -:   92:			printf("Must gain an estate if there are any\n");
+        -:   93:		    }
+   666076:   94:		    if (supplyCount(estate, state) > 0) {
+call    0 returned 100%
+branch  1 taken 1% (fallthrough)
+branch  2 taken 99%
+     1998:   95:			gainCard(estate, state, 0, currentPlayer);
+call    0 returned 100%
+        -:   96:
+     1998:   97:			state->supplyCount[estate]--;//Decrement estates
+     1998:   98:			if (supplyCount(estate, state) == 0) {
+call    0 returned 100%
+branch  1 taken 19% (fallthrough)
+branch  2 taken 81%
+      387:   99:			    isGameOver(state);
+call    0 returned 100%
+        -:  100:			}
+        -:  101:		    }
+   666076:  102:		    card_not_discarded = 0;//Exit the loop
+        -:  103:		}
+        -:  104:
+        -:  105:		else {
+  1400427:  106:		    p++;//Next card
+        -:  107:		}
+        -:  108:	    }
+        -:  109:	}
+        -:  110:
+        -:  111:	else {
+   332882:  112:	    if (supplyCount(estate, state) > 0) {
+call    0 returned 100%
+branch  1 taken 1% (fallthrough)
+branch  2 taken 99%
+     1196:  113:		gainCard(estate, state, 0, currentPlayer);//Gain an estate
+call    0 returned 100%
+        -:  114:
+     1196:  115:		state->supplyCount[estate]--;//Decrement Estates
+     1196:  116:		if (supplyCount(estate, state) == 0) {
+call    0 returned 100%
+branch  1 taken 18% (fallthrough)
+branch  2 taken 82%
+      212:  117:		    isGameOver(state);
+call    0 returned 100%
+        -:  118:		}
+        -:  119:	    }
+        -:  120:	}
+  1000000:  121:	return 0;
+        -:  122:}
+        -:  123:
