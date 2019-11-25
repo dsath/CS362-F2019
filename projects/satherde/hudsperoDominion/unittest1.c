@@ -1,60 +1,96 @@
-/** UNIT TEST FOR playMine FUNCTION, REFACTORED **/
+///////////////////////////////////////////
+// Baron Unit Tests
+//////////////////////////////////////////
+
+
+//int baron_func(struct gameState *state, int currentPlayer, int choice1);
+
+#include <stdio.h> 
+#include <string.h> 
+#include <math.h>
+#include <stdlib.h>
 #include "dominion.h"
 #include "dominion_helpers.h"
 #include "rngs.h"
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
 
-//MAX_DECK = 500, defined in dominion.h
-//MAX_HAND = 500, defined in dominion.h
+int baron_func_test(struct gameState *state, int currentPlayer, int choice1); 
 
-void testMine(int loop_number, int card1, int card2, struct gameState* game, int handPos) {
-	int oracle; //STORE EXIT RESULT FROM FUNCTION
-	oracle = playMine(card1, card2, game, handPos);
-	if(oracle != 0)
-		printf("\tLoop %d: Could not discard %d for %d\n", loop_number, card1, card2);
-	}
-
-int main () {
-
-	//INITIALIZE NECESSARY INDEXES AND GAME VARIABLES
-	int n, i, j, l;
+int main() {
+int k[10] = { adventurer, council_room, feast, gardens, mine
+, remodel, smithy, village, baron, great_hall };
 	struct gameState G;
-
-	printf("unittest1.c, Testing playMine():\n");
-
-	//SEEDING FOR RANDOM NUMBER GENERATION
-	SelectStream(2);
-	PutSeed(3);
-
-	for (n = 0; n < 2000; n++) { //RUN 2000 TIMES
-		for (i = 0; i < sizeof(struct gameState); i++) { //GENERATE A RANDOM GAME STATE
-			((char*)&G)[i] = floor(Random() * 256);}
-
-		G.deckCount[0] = floor(Random() * MAX_DECK);    //DEFINES RANDOM NUMBER OF CARDS IN DECK
-		G.discardCount[0] = floor(Random() * MAX_DECK); //DEFINES RANDOM NUMBER OF CARDS IN DISCARD PILE
-		G.handCount[0] = 5; //PLAYER HOLDS ONLY 5 CARDS
-		G.whoseTurn = 0; //SET PLAYER 1
-
-		//TEST playMine() function
-		for(j = 1; j < 4; j++) {
-			for(l = 1; l < 4; l++) {
-				//ASSIGN THE PLAYER A SPECIFIC HAND; BUG APPEARS ONLY IN SPECIFIC CONDITION WHEN PLAYING MINE CARD
-				G.hand[0][0] = mine;
-				G.hand[0][1] = copper; //enum value 4
-				G.hand[0][2] = silver; //enum value 5
-				G.hand[0][3] = gold;   //enum value 6
-				G.hand[0][4] = estate;
-				printf("\t\tBEFORE: Player's hand: %d, %d, %d, %d, %d\n", G.hand[0][0], G.hand[0][1], G.hand[0][2], G.hand[0][3], G.hand[0][4]);
-				testMine(n, G.hand[0][j], G.hand[0][l], &G, 0); //RUN THE TEST
-				
-				printf("\t\tAFTER (l-loop): Player's hand: %d, %d, %d, %d, %d\n", G.hand[0][0], G.hand[0][1], G.hand[0][2], G.hand[0][3], G.hand[0][4]);
-			}
-			printf("\tAFTER (j-loop): Player's hand: %d, %d, %d, %d, %d\n", G.hand[0][0], G.hand[0][1], G.hand[0][2], G.hand[0][3], G.hand[0][4]);	
-		}
-		printf("AFTER (n-loop): Player's hand: %d, %d, %d, %d, %d\n", G.hand[0][0], G.hand[0][1], G.hand[0][2], G.hand[0][3], G.hand[0][4]);
-	}
+	int
+	coppers[MAX_HAND];
+	int
+	silvers[MAX_HAND];
+	int
+	golds[MAX_HAND];
+	memset(&G, 0, sizeof(struct gameState));
+	initializeGame(2, k, 5, &G);
+	G.handCount[0] = 5;
+	memcpy(G.hand[0], coppers, sizeof(int) * 5);
+	G.hand[0][4] = estate;
+	baron_func_test(&G, 0, 1);
+	baron_func_test(&G, 0, 0);
+	G.supplyCount[estate] = 0;
+	baron_func_test(&G, 0, 0);
+	G.handCount[0] = -1;
+	baron_func_test(&G, 0, 0);
 
 	return 0;
 }
+
+int baron_func_test(struct gameState *state, int currentPlayer, int choice1) {
+	state->numBuys++;//Increase buys by 1!
+	if (choice1 > 0) { //Boolean true or going to discard an estate
+	    //int p = 2;//Iterator for hand!
+	    int p = 0;//Iterator for hand!
+	    int card_not_discarded = 1;//Flag for discard set!
+	    while(card_not_discarded) {
+		if (state->hand[currentPlayer][p] == estate) { //Found an estate card!
+		    state->coins += 4;//Add 4 coins to the amount of coins
+		    state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
+		    state->discardCount[currentPlayer]++;
+		    for (; p < state->handCount[currentPlayer]; p++) {
+			state->hand[currentPlayer][p] = state->hand[currentPlayer][p+1];
+		    }
+		    state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
+		    state->handCount[currentPlayer]--;
+		    //card_not_discarded = 1;//Exit the loop
+		    card_not_discarded = 0;//Exit the loop
+		}
+		else if (p > state->handCount[currentPlayer]) {
+		    if(DEBUG) {
+			printf("No estate cards in your hand, invalid choice\n");
+			printf("Must gain an estate if there are any\n");
+		    }
+		    if (supplyCount(estate, state) > 0) {
+			gainCard(estate, state, 0, currentPlayer);
+
+			state->supplyCount[estate]--;//Decrement estates
+			if (supplyCount(estate, state) == 0) {
+			    isGameOver(state);
+			}
+		    }
+		    card_not_discarded = 0;//Exit the loop
+		}
+
+		else {
+		    p++;//Next card
+		}
+	    }
+	}
+
+	else {
+	    if (supplyCount(estate, state) > 0) {
+		gainCard(estate, state, 0, currentPlayer);//Gain an estate
+
+		state->supplyCount[estate]--;//Decrement Estates
+		if (supplyCount(estate, state) == 0) {
+		    isGameOver(state);
+		}
+	    }
+	}
+	return 0;
+}
+

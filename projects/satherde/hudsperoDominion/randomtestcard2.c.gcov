@@ -1,0 +1,180 @@
+        -:    0:Source:randomtestcard2.c
+        -:    0:Graph:randomtestcard2.gcno
+        -:    0:Data:randomtestcard2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:///////////////////////////////////////////
+        -:    2:// Baron Unit Tests
+        -:    3://////////////////////////////////////////
+        -:    4:
+        -:    5:
+        -:    6://int baron_func(struct gameState *state, int currentPlayer, int choice1);
+        -:    7:
+        -:    8:#include <stdio.h> 
+        -:    9:#include <string.h> 
+        -:   10:#include <math.h>
+        -:   11:#include <stdlib.h>
+        -:   12:#include "dominion.h"
+        -:   13:#include "dominion_helpers.h"
+        -:   14:#include "rngs.h"
+        -:   15:
+        -:   16:
+        -:   17://int minion_func_test(struct gameState *state, int currentPlayer, int handPos, int choice1, int choice2); 
+        -:   18:int playMinion_test(int choice1, int choice2, struct gameState *state, int handPos); 
+        -:   19:
+        -:   20:
+function main called 1 returned 100% blocks executed 100%
+        1:   21:int main() {
+        1:   22:	int k[10] = { adventurer, council_room, feast, gardens, mine
+        -:   23:	, remodel, smithy, village, baron, great_hall };
+        -:   24:	struct gameState G;
+        -:   25:	int
+        -:   26:	coppers[MAX_HAND];
+        -:   27:	int
+        -:   28:	silvers[MAX_HAND];
+        -:   29:	int
+        -:   30:	golds[MAX_HAND];
+        1:   31:	memset(&G, 0, sizeof(struct gameState));
+        -:   32:	
+        1:   33:	int i = 0;
+        1:   34:	int j = 0;
+     1001:   35:	for( i = 0; i < 1000; i++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   36:
+     1000:   37:		initializeGame(2, k, rand(), &G);
+call    0 returned 100%
+call    1 returned 100%
+  1001000:   38:		for( j = 0; j < 1000; j++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   39:			//minion_func_test(&G, 1, 2, rand() % 3, rand() % 3);
+  1000000:   40:			playMinion_test(rand() % 3, rand() % 3, &G, 2);
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -:   41:		}
+        -:   42:	}
+        -:   43:
+        1:   44:	return 0;
+        -:   45:}
+        -:   46:
+        -:   47:/*
+        -:   48:int minion_func_test(struct gameState *state, int currentPlayer, int handPos, int choice1, int choice2) {
+        -:   49:	int i = 0;
+        -:   50:	int j = 0;
+        -:   51:
+        -:   52:        //+1 action
+        -:   53:        state->numActions++;
+        -:   54:
+        -:   55:        //discard card from hand
+        -:   56:        discardCard(handPos, currentPlayer, state, 0);
+        -:   57:
+        -:   58:		if (choice1)
+        -:   59:        {
+        -:   60:            state->coins = state->coins + 4;
+        -:   61:        }
+        -:   62:        else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
+        -:   63:        {
+        -:   64:            //discard hand
+        -:   65:            while(numHandCards(state) > 0)
+        -:   66:            {
+        -:   67:                discardCard(handPos, currentPlayer, state, 0);
+        -:   68:            }
+        -:   69:
+        -:   70:            //draw 4
+        -:   71:            for (i = 0; i < 2; i++)
+        -:   72:            {
+        -:   73:                drawCard(currentPlayer, state);
+        -:   74:            }
+        -:   75:
+        -:   76:            //other players discard hand and redraw if hand size > 4
+        -:   77:            for (i = 0; i < state->numPlayers; i++)
+        -:   78:            {
+        -:   79:                if (i != currentPlayer)
+        -:   80:                {
+        -:   81:                    if ( state->handCount[i] > 4 )
+        -:   82:                    {
+        -:   83:                        //discard hand
+        -:   84:                        while( state->handCount[i] > 0 )
+        -:   85:                        {
+        -:   86:                            discardCard(handPos, i, state, 0);
+        -:   87:                        }
+        -:   88:
+        -:   89:                        //draw 4
+        -:   90:                        for (j = 0; j < 4; j++)
+        -:   91:                        {
+        -:   92:                            drawCard(i, state);
+        -:   93:                        }
+        -:   94:                    }
+        -:   95:                }
+        -:   96:            }
+        -:   97:
+        -:   98:        }
+        -:   99:	return 0;
+        -:  100:}
+        -:  101:
+        -:  102:*/
+        -:  103:
+function playMinion_test called 1000000 returned 100% blocks executed 100%
+  1000000:  104:int playMinion_test(int choice1, int choice2, struct gameState *state, int handPos) {
+  1000000:  105:	int currentPlayer = 1;
+        -:  106:	int i, j;
+  1000000:  107:	state->numActions++; //+1 action
+  1000000:  108:	discardCard(handPos, currentPlayer, state, 0); //discard card from hand
+call    0 returned 100%
+        -:  109:
+  1000000:  110:	if (choice1) {
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+   666696:  111:		state->coins = state->coins + 1; //BUG! Should be +2
+        -:  112:	}
+   333304:  113:	else if (choice2) { //discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
+branch  0 taken 67% (fallthrough)
+branch  1 taken 33%
+   946815:  114:		while(numHandCards(state) > 0) { //discard hand
+call    0 returned 100%
+branch  1 taken 69%
+branch  2 taken 31% (fallthrough)
+   501787:  115:			discardCard(handPos, currentPlayer, state, 0); //BUG! trashFlag should be set to 0, not 1 (had to revert to run tests)
+call    0 returned 100%
+        -:  116:			//discardCard(handPos, currentPlayer, state, 1); //BUG! trashFlag should be set to 0, not 1 (had to revert to run tests)
+        -:  117:		}
+        -:  118:
+  1112570:  119:		for (i = 0; i < 4; i++) { //draw 4
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+   890056:  120:			drawCard(currentPlayer, state);
+call    0 returned 100%
+        -:  121:		}
+        -:  122:
+        -:  123:		//other players discard hand and redraw if hand size > 4
+   253328:  124:		for (i = 0; i < state->numPlayers; i++) {
+branch  0 taken 12%
+branch  1 taken 88% (fallthrough)
+    30814:  125:			if (i != currentPlayer) {
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+    15407:  126:				if ( state->handCount[i] > 4 ) {
+branch  0 taken 6% (fallthrough)
+branch  1 taken 94%
+     7000:  127:					while( state->handCount[i] > 0 ) { //discard hand
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+     5000:  128:						discardCard(handPos, i, state, 0);
+call    0 returned 100%
+        -:  129:					}
+        -:  130:
+     5000:  131:					for (j = 0; j < 4; j++) { //draw 4
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+     4000:  132:						drawCard(i, state);
+call    0 returned 100%
+        -:  133:					}
+        -:  134:				}
+        -:  135:			}
+        -:  136:		}
+        -:  137:
+        -:  138:	}
+  1000000:  139:	return 0;
+        -:  140:}
