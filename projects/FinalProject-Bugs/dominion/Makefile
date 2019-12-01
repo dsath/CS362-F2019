@@ -27,11 +27,11 @@ player: player.c interface.o
 
 all: playdom player 
 
-unittestresults: bug5 #bug6 bug7
+unittestresults: bug5 bug6 #bug7
 	satherde_unittest1 >> unittestresults.out
 	gcov dominion.c -b -f >> unittestresults.out
-	satherde_unittest2
-	satherde_unittest3
+	satherde_unittest2 >> unittestresults.out
+	gcov dominion.c -b -f >> unittestresults.out
 
 bug5:
 	gcc -o satherde_unittest1 satherde_unittest1.c dominion.c rngs.c -lm -coverage
@@ -43,4 +43,4 @@ bug7:
 	gcc -o satherde_unittest3 satherde_unittest3.c dominion.c rngs.c -lm -coverage
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe satherde_unittest1 satherde_unittest2 satherde_unittest3
