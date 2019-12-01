@@ -27,23 +27,19 @@ player: player.c interface.o
 
 all: playdom player 
 
-unittestresults: unittest1 #unittest2 unittest3
+unittestresults: bug5 #bug6 bug7
 	satherde_unittest1 >> unittestresults.out
 	gcov dominion.c -b -f >> unittestresults.out
 	satherde_unittest2
 	satherde_unittest3
 
-unittest1:
+bug5:
 	gcc -o satherde_unittest1 satherde_unittest1.c dominion.c rngs.c -lm -coverage
 
-
-
-unittest2:
+bug6:
 	gcc -o satherde_unittest2 satherde_unittest2.c dominion.c rngs.c -lm -coverage
 
-
-
-unittest3:
+bug7:
 	gcc -o satherde_unittest3 satherde_unittest3.c dominion.c rngs.c -lm -coverage
 
 clean:
