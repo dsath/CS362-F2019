@@ -27,16 +27,16 @@ player: player.c interface.o
 
 all: playdom player 
 
-randomtestresults: 
-	gcc -o randomtestcard1 randomtestcard1.c dominion.c rngs.c -lm -coverage
-	gcc -o randomtestcard2 randomtestcard2.c dominion.c rngs.c -lm -coverage
-	gcc -o randomtestcard3 randomtestcard3.c dominion.c rngs.c -lm -coverage
-	randomtestcard1
-	randomtestcard2
-	randomtestcard3
-	gcov randomtestcard1.c -b -f >> randomtestresults.out
-	gcov randomtestcard2.c -b -f >> randomtestresults.out
-	gcov randomtestcard3.c -b -f >> randomtestresults.out
+unittestresults: 
+	gcc -o satherde_unittest1 satherde_unittest1.c dominion.c rngs.c -lm -coverage
+	satherde_unittest1
+	gcov dominion.c -b -f >> unittestresults.out
+	gcc -o satherde_unittest2 satherde_unittest2.c dominion.c rngs.c -lm -coverage
+	satherde_unittest2
+	gcov dominion.c -b -f >> unittestresults.out
+	gcc -o satherde_unittest3 satherde_unittest3.c dominion.c rngs.c -lm -coverage
+	satherde_unittest3
+	gcov dominion.c -b -f >> unittestresults.out
 	
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
