@@ -18,6 +18,7 @@
 	
 int main() {
 	int i;
+	int top;
 	int firstScore;
 	int secondScore;
 int k[10] = { adventurer, council_room, feast, gardens, mine
@@ -33,20 +34,34 @@ int k[10] = { adventurer, council_room, feast, gardens, mine
 	initializeGame(2, k, 5, &G);
 	G.whoseTurn = 0;
 	G.handCount[0] = 5;
-	G.coins = 3;
+	G.coins = 0;
 	G.numActions = 1;
 	G.phase = 0;
+
 	for(i = 0; i < 5; i++) {
-		G.hand[0][i] = feast;
+		G.hand[0][i] = tribute;
 	}
-	fprintf(stderr, "The card is: %d\n", G.hand[0][3]);
+
+
+//set top five cards in next player's deck to treasures
+	top = G.deckCount[1] - 1;
+		G.deck[1][top] = copper;
+		G.deck[1][top - 1] = silver;
+		G.deck[1][top - 2] = gold;
+
+		G.deck[1][0] = copper;
+		G.deck[1][1] = silver;
+		G.deck[1][2] = gold;
+
+
+
 	if(playCard(3, 0, 0, 0, &G) == -1) {
 		fprintf(stderr, "%s\n", "Playcard failed\n");
 	}
 	
 	if( ! (G.coins == 3) ) {
-		printf("%s\n", "Assert Failed: (G.coins == 3)");
-		fprintf(stderr, "%s\n",  "Assert Failed: (G.coins == 3)");
+		printf("%s\n", "Assert Failed: (i < 2)");
+		fprintf(stderr, "%s\n",  "Assert Failed: (i < 2)");
 	}
 	return 0;
 }

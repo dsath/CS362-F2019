@@ -27,10 +27,10 @@ player: player.c interface.o
 
 all: playdom player 
 
-unittestresults: bug5 bug6 #bug7
-	satherde_unittest1 >> unittestresults.out
-	gcov dominion.c -b -f >> unittestresults.out
+unittestresults: bug5 bug6 bug7
+	satherde_unittest1 > unittestresults.out
 	satherde_unittest2 >> unittestresults.out
+	satherde_unittest3 >> unittestresults.out
 	gcov dominion.c -b -f >> unittestresults.out
 
 bug5:
