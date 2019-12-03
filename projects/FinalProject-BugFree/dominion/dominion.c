@@ -826,14 +826,14 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         gainCard(choice2, state, 2, currentPlayer);
 
         //discard card from hand
-        discardCard(handPos, currentPlayer, state, 1);
+        discardCard(handPos, currentPlayer, state, 0);
 
         //discard trashed card
         for (i = 0; i < state->handCount[currentPlayer]; i++)
         {
             if (state->hand[currentPlayer][i] == j)
             {
-                discardCard(i, currentPlayer, state, 0);
+                discardCard(i, currentPlayer, state, 1);
                 break;
             }
         }
