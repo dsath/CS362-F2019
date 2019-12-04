@@ -688,6 +688,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     int k;
     int x;
     int index;
+    int tribfix;
     int currentPlayer = whoseTurn(state);
     int nextPlayer = currentPlayer + 1;
 
@@ -848,7 +849,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case remodel:
         j = state->hand[currentPlayer][choice1];  //store card we will trash
 
-        if ( (getCost(state->hand[currentPlayer][choice1]) + 2) > getCost(choice2) ) // Bug number 3 fix
+        if ( (getCost(state->hand[currentPlayer][choice1]) + 2) < getCost(choice2) ) // Bug number 3 fix
         {
             return -1;
         }
@@ -1031,6 +1032,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         return 0;
 
     case tribute:
+        tribfix = 0;
         if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
             if (state->deckCount[nextPlayer] > 0) {
                 tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
@@ -1070,6 +1072,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one
             state->playedCards[state->playedCardCount] = tributeRevealedCards[1];
             state->playedCardCount++;
+            tribfix = 1;
             tributeRevealedCards[1] = -1;
         }
 
@@ -1083,8 +1086,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
                 drawCard(currentPlayer, state);
             }
             //Bug number 9
-            else if ((tributeRevealedCards[i] == -1)&&(tribS == 1)) {
-                tribS = 0;
+            else if ((tributeRevealedCards[i] == -1)&&(tribfix == 1)) {
+                tribfix = 0;
                 continue;
             }
             else { //Action Card
@@ -1151,7 +1154,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
  //               {
  //                   discardCard(i, currentPlayer, state, 1);
  //                   break;
-                }
+ //               }
             }
         }
 
