@@ -401,7 +401,7 @@ int isGameOver(struct gameState *state) {
 
     //if three supply pile are at 0, the game ends
     j = 0;
-    for (i = 0; i < 27; i++)
+    for (i = 0; i < 27; i++) // Bug number 4 fix
     {
         if (state->supplyCount[i] == 0)
         {
@@ -817,16 +817,21 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         {
             return -1;
         }
-
-        if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
+        // bug number 2
+        if ( (getCost(state->hand[currentPlayer][choice1]) + 3) < getCost(choice2) )
         {
             return -1;
         }
 
+//        if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
+//        {
+//            return -1;
+//        }
+
         gainCard(choice2, state, 2, currentPlayer);
 
         //discard card from hand
-        discardCard(handPos, currentPlayer, state, 0);
+        discardCard(handPos, currentPlayer, state, 1);  //Bug number 1 fix
 
         //discard trashed card
         for (i = 0; i < state->handCount[currentPlayer]; i++)
@@ -843,7 +848,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case remodel:
         j = state->hand[currentPlayer][choice1];  //store card we will trash
 
-        if ( (getCost(state->hand[currentPlayer][choice1]) + 2) < getCost(choice2) )
+        if ( (getCost(state->hand[currentPlayer][choice1]) + 2) > getCost(choice2) ) // Bug number 3 fix
         {
             return -1;
         }
@@ -1077,6 +1082,11 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
                 drawCard(currentPlayer, state);
                 drawCard(currentPlayer, state);
             }
+            //Bug number 9
+            else if ((tributeRevealedCards[i] == -1)&&(tribS == 1)) {
+                tribS = 0;
+                continue;
+            }
             else { //Action Card
                 state->numActions = state->numActions + 2;
             }
@@ -1132,10 +1142,15 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
         {
             for (i = 0; i < state->handCount[currentPlayer]; i++)
             {
-                if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
+                //Bug number 10
+                if (i != handPos && state->hand[currentPlayer][i]  == state->hand[currentPlayer][choice1] && i != choice1)
                 {
-                    discardCard(i, currentPlayer, state, 1);
-                    break;
+                    j++;
+                }
+ //               if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
+ //               {
+ //                   discardCard(i, currentPlayer, state, 1);
+ //                   break;
                 }
             }
         }
